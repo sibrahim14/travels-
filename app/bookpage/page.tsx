@@ -1,11 +1,9 @@
-"use client";
-export const dynamic = "force-dynamic";
-
+// "use client";
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Navbar from "../componts/navebar";
+import Navbar from "../componts/navebar";   
 
 export default function BookPage() {
   const searchParams = useSearchParams();
@@ -30,6 +28,10 @@ export default function BookPage() {
     }
 
     setLoading(true);
+    if (!pickupDate) { 
+        setLoading(false);
+        return; 
+    }
 
     const formattedDate = pickupDate.toLocaleDateString("en-IN");
 
