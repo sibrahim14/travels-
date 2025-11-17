@@ -1,12 +1,13 @@
 "use client";
 export const dynamic = "force-dynamic";
+
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Navbar from "../componts/navebar";
 
-export default function bookPage() {
+export default function BookPage() {
   const searchParams = useSearchParams();
 
   const selectedCar = searchParams.get("car") || "";
@@ -20,7 +21,6 @@ export default function bookPage() {
   const [pickupTime, setPickupTime] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Admin WhatsApp Number (E.164 format)
   const ADMIN_WHATSAPP = "919014755908";
 
   const handleBooking = async () => {
@@ -49,16 +49,14 @@ Pickup Date: ${formattedDate}
 Pickup Time: ${pickupTime}
 `;
 
-    // 👉 Send WhatsApp through your Next.js API (not wa.me)
-   const res = await fetch("/api/sendWhatsApp", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    to: ADMIN_WHATSAPP,
-    message,
-  }),
-});
-
+    const res = await fetch("/api/sendWhatsApp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        to: ADMIN_WHATSAPP,
+        message,
+      }),
+    });
 
     const data = await res.json();
     setLoading(false);
@@ -78,12 +76,8 @@ Pickup Time: ${pickupTime}
         <h2 className="book-title">Book Your Ride</h2>
 
         <div className="book-info-box">
-          <p>
-            <strong>Selected Car:</strong> {selectedCar}
-          </p>
-          <p>
-            <strong>Selected Service:</strong> {selectedService}
-          </p>
+          <p><strong>Selected Car:</strong> {selectedCar}</p>
+          <p><strong>Selected Service:</strong> {selectedService}</p>
         </div>
 
         <label className="book-label">Full Name</label>
