@@ -1,11 +1,12 @@
 "use client";
+export const dynamic = "force-dynamic";
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Navbar from "../componts/navebar";
 
-export default function BookPage() {
+export default function bookPage() {
   const searchParams = useSearchParams();
 
   const selectedCar = searchParams.get("car") || "";
