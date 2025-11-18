@@ -1,11 +1,13 @@
-import React from 'react'
+  
+import React, { Suspense } from "react";  
 import BookPage from '../bookpage'
 
 const page = () => {
+  
   return (
-    <div>
+    <Suspense fallback={<div>Loading booking page...</div>}>
       <BookPage/>
-    </div>
+     </Suspense>
   )
 }
 

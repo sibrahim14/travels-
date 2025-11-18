@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, } from "react";
 import Link from "next/link";
 import { supabase } from "../componts/supabase";
 import { IoLogoWhatsapp } from "react-icons/io";
@@ -15,7 +15,7 @@ interface Car {
   price_per_km: number;
 }
 
-export default function CarspageUI() {
+function CarspageUI() {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -99,4 +99,10 @@ export default function CarspageUI() {
       </div>
     </div>
   );
+}
+
+export default function Page() {
+  return <Suspense fallback={<p>Loading....</p>}>
+    <CarspageUI />
+  </Suspense>
 }

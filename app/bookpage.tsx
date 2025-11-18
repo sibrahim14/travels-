@@ -1,13 +1,14 @@
 "use client";
+
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Navbar from "./componts/navebar";
 
-export default function BookPage() {
-  const searchParams = useSearchParams();
+export default function BookPageContent() {
 
+  const searchParams = useSearchParams();
   const selectedCar = searchParams.get("car") || "";
   const selectedService = searchParams.get("service") || "";
 
@@ -28,12 +29,8 @@ export default function BookPage() {
     }
 
     setLoading(true);
-    if (!pickupDate) {
-      setLoading(false);
-      return;
-    }
 
-    const formattedDate = pickupDate.toLocaleDateString("en-IN");
+    const formattedDate = pickupDate?.toLocaleDateString("en-IN");
 
     const message = `
 New Booking Confirmed:
@@ -66,7 +63,7 @@ Pickup Time: ${pickupTime}
     if (data?.success) {
       alert("Booking sent to Admin WhatsApp!");
     } else {
-      alert("Failed to send WhatsApp message. Check console.");
+      alert("Failed to send WhatsApp message.");
       console.error(data);
     }
   };
@@ -74,6 +71,7 @@ Pickup Time: ${pickupTime}
   return (
     <div className="book-page">
       <Navbar />
+
       <div className="book-card">
         <h2 className="book-title">Book Your Ride</h2>
 

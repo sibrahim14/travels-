@@ -5,7 +5,9 @@ import Navbar from "../componts/navebar"; // make sure the path is correct
 import { Car, MapPin, Plane, Navigation, } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-export default function Services() {
+
+import { Suspense } from "react";
+function Services() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedCar = searchParams.get("car") || "";
@@ -94,4 +96,9 @@ export default function Services() {
       </section>
     </div>
   );
+}
+export default function page () {
+  return<Suspense fallback={<p>looding....</p>}>
+    <Services/>
+  </Suspense>
 }
