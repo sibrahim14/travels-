@@ -12,6 +12,7 @@ interface Car {
   name: string;
   image_url?: string | null;
   seats: number;
+  bag:number;
   price_per_km: number;
 }
 
@@ -73,7 +74,8 @@ function CarspageUI() {
             />
 
             <h2>{car.name}</h2>
-            <p><strong>Seats:</strong> {car.seats}</p>
+            <p><strong>Seats:</strong> {car.seats} | <strong>Bag:</strong> {car.bag}</p>
+            
             <p><strong>Price per km:</strong> ₹{car.price_per_km}</p>
 
             <Link

@@ -8,6 +8,7 @@ interface Car {
   name: string;
   image_url?: string | null;
   seats: number;
+  bag: number;
   price_per_km: number;
 }
 interface Booking {
@@ -22,12 +23,15 @@ interface Booking {
 }
 
 function Raju() {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editCarId, setEditCarId] = useState<string | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [newCar, setNewCar] = useState<Omit<Car, "id">>({
     name: "",
     seats: 0,
+    bag: 0,
     price_per_km: 0,
     image_url: "",
   });
@@ -60,7 +64,7 @@ function Raju() {
       alert("Error adding car: " + error.message);
     } else {
       alert("Car added successfully!");
-      setNewCar({ name: "", seats: 0, price_per_km: 0, image_url: "" });
+      setNewCar({ name: "", seats: 0, bag: 0, price_per_km: 0, image_url: "" });
       const { data: updatedCars } = await supabase
         .from("cars")
         .select("*")
@@ -80,6 +84,45 @@ function Raju() {
       setCars(cars.filter((c) => c.id !== id));
     }
   };
+  // Edite
+  const handleEditClick = (car: any) => {
+  setIsEditing(true);
+  setEditCarId(car.id);
+
+  setNewCar({
+    name: car.name,
+    seats: car.seats,
+    bag: car.bag,
+    price_per_km: car.price_per_km,
+    image_url: car.image_url,
+  });
+};
+  const handleUpdateCar = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const { error } = await supabase
+      .from("cars")
+      .update(newCar)
+      .eq("id", editCarId);
+
+    if (error) {
+      alert("Error updating car: " + error.message);
+    } else {
+      alert("Car updated successfully!");
+
+      setNewCar({ name: "", seats: 0, bag: 0, price_per_km: 0, image_url: "" });
+      setIsEditing(false);
+      setEditCarId(null);
+
+      const { data: updatedCars } = await supabase
+        .from("cars")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      setCars(updatedCars || []);
+    }
+  };
+
 
   if (loading) return <div className="container"><p>Loading data...</p></div>;
 
@@ -99,24 +142,18 @@ function Raju() {
             onChange={(e) => setNewCar({ ...newCar, name: e.target.value })}
             required
           />
-          {/* <input
-            type="text"
-            placeholder="Model"
-            value={newCar.model}
-            onChange={(e) => setNewCar({ ...newCar, model: e.target.value })}
-          /> */}
           <input
             type="number"
             placeholder="Seats"
             value={newCar.seats}
             onChange={(e) => setNewCar({ ...newCar, seats: Number(e.target.value) })}
           />
-          {/* <input
-            type="text"
-            placeholder="Fuel Type"
-            value={newCar.fuel}
-            onChange={(e) => setNewCar({ ...newCar, fuel: e.target.value })}
-          /> */}
+          <input
+            type="number"
+            placeholder="bag"
+            value={newCar.bag}
+            onChange={(e) => setNewCar({ ...newCar, bag: Number(e.target.value) })}
+          />
           <input
             type="number"
             placeholder="Price per KM"
@@ -145,7 +182,7 @@ function Raju() {
                 <th>Name</th>
                 {/* <th>Model</th> */}
                 <th>Seats</th>
-                {/* <th>Fuel</th> */}
+                <th>bag</th>
                 <th>Price/KM</th>
                 <th>Image</th>
                 <th>Delete</th>
@@ -157,7 +194,7 @@ function Raju() {
                   <td>{car.name}</td>
                   {/* <td>{car.model}</td> */}
                   <td>{car.seats}</td>
-                  {/* <td>{car.fuel}</td> */}
+                  <td>{car.bag}</td>
                   <td>₹{car.price_per_km}</td>
                   <td>
                     <img
@@ -170,7 +207,9 @@ function Raju() {
                   <td>
                     <button onClick={() => car.id && handleDeleteCar(car.id)}>🗑️</button>
                   </td>
+                  <button onClick={() => car.id && handleEditClick (car.id) }>Edit</button>
                 </tr>
+
               ))}
             </tbody>
           </table>

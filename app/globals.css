@@ -982,3 +982,95 @@ button {
 button:hover {
   background: #2a54c9;
 }
+
+/* about page  */
+.about-hero {
+  position: relative;
+  background: url("https://images.unsplash.com/photo-1504215680853-026ed2a45def?w=1500")
+    center/cover no-repeat;
+  height: 45vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.about-hero-content {
+  position: relative;
+  color: white;
+  text-align: center;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.services-section {
+  padding: 40px 20px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.service-card {
+  background: white;
+  padding: 25px;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.service-card h3 {
+  margin-top: 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.service-card p {
+  font-size: 15px;
+  margin-top: 8px;
+  color: #444;
+}
+.cta2{
+  margin: auto
+
+}
+.cta2 h2 {
+  display: flex;
+  text-align: center;
+}
+/* ✅ MOBILE VIEW */
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-hero {
+    height: 35vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-card {
+    padding: 20px;
+  }
+
+  .section-title {
+    font-size: 26px;
+  }
+}

@@ -13,7 +13,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="nav-logo">
           <Car className="nav-logo-icon" />
-          <span> Traviles</span>
+          <span> Travels</span>
         </Link>
 
         {/* Desktop Links */}
@@ -22,6 +22,7 @@ export default function Navbar() {
           <Link href="/Servisepage">Services</Link>
           <Link href="/Carspage">Cars</Link>
           <Link href="/contact">Contact </Link>
+           <Link href="/about">  About</Link>
           <Link href="/Carspage"><button className="nav-btn">Get Started</button></Link>
         </div>
 
