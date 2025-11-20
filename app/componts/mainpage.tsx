@@ -3,6 +3,8 @@
 import { MapPin, Shield, Clock, Award } from "lucide-react";
 import Navbar from "./navebar"
 import Link from "next/link";
+import ReviewPage from "../about/ReviewPage/page";
+
 export default function Index() {
 
   // aftre opion whast defalt message 
@@ -128,6 +130,7 @@ export default function Index() {
           <button className="btn white2">Book Your Car Now</button>
         </Link>
       </section>
+      {/* <ReviewPage /> */}
     </div>
   );
 }

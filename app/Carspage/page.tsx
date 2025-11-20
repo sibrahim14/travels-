@@ -72,7 +72,7 @@ function CarspageUI() {
                             className="car-img"
                         />
                         <h2>{car.name}</h2>
-                        <p><strong>Seats:</strong> {car.seats} | <strong>Bag:</strong> {car.bag}</p>
+                        <p><strong>Seats:</strong> {car.seats} +1 | <strong>Bag:</strong> {car.bag}</p>
                     
                         <p><strong>Price per km:</strong> ₹{car.price_per_km}</p>
                         <Link
