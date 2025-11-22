@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
-import { getSupabase } from "../../componts/supabase";
+import { supabase } from "../../componts/supabase";
 
 // Initialize Resend
 // NOTE: don't initialize Resend at module-eval time — do it inside the handler
@@ -58,27 +58,22 @@ export async function POST(req: Request) {
     // Step 3: Persist booking to a serverless-safe store (Supabase) and optionally to local JSON in dev
     // Try Supabase insert first
     try {
-      const supabase = getSupabase();
-      if (supabase) {
-        const { error: sbError } = await supabase.from("bookings").insert([
-          {
-            id: newBooking.id,
-            fullName: newBooking.fullName,
-            phone: newBooking.phone,
-            pickup: newBooking.pickup,
-            drop: newBooking.drop,
-            pickupDate: newBooking.pickupDate,
-            pickupTime: newBooking.pickupTime,
-            selectedCar: newBooking.selectedCar,
-            selectedService: newBooking.selectedService,
-            createdAt: newBooking.createdAt,
-          },
-        ]);
-        if (sbError) {
-          console.error("Supabase insert error:", sbError);
-        }
-      } else {
-        console.warn("Supabase client not configured; skipping DB insert.");
+      const { error: sbError } = await supabase.from("bookings").insert([
+        {
+          id: newBooking.id,
+          fullName: newBooking.fullName,
+          phone: newBooking.phone,
+          pickup: newBooking.pickup,
+          drop: newBooking.drop,
+          pickupDate: newBooking.pickupDate,
+          pickupTime: newBooking.pickupTime,
+          selectedCar: newBooking.selectedCar,
+          selectedService: newBooking.selectedService,
+          createdAt: newBooking.createdAt,
+        },
+      ]);
+      if (sbError) {
+        console.error("Supabase insert error:", sbError);
       }
     } catch (sbErr) {
       console.error("Supabase request failed:", sbErr);
