@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
 import fs from "fs/promises";
 import path from "path";
 
@@ -16,6 +15,24 @@ const BOOKINGS_FILE = path.join(process.cwd(), "bookings.json");
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+
+    // Basic validation for required fields
+    const required = [
+      "fullName",
+      "phone",
+      "pickup",
+      "drop",
+      "pickupDate",
+      "pickupTime",
+    ];
+    const missing = required.filter((k) => !body?.[k]);
+    if (missing.length) {
+      console.warn("Booking request missing fields:", missing);
+      return NextResponse.json(
+        { success: false, error: `Missing fields: ${missing.join(", ")}` },
+        { status: 400 }
+      );
+    }
 
     // Step 1: Read previous bookings
     let bookings = [];
@@ -48,7 +65,9 @@ export async function POST(req: Request) {
 
     if (resendApiKey && adminEmail) {
       try {
-        const resend = new Resend(resendApiKey);
+        const mod = await import("resend");
+        const ResendCtor = (mod as any)?.Resend ?? (mod as any)?.default ?? (mod as any);
+        const resend = new ResendCtor(resendApiKey);
         await resend.emails.send({
           from: "Cab Booking <onboarding@resend.dev>",
           to: adminEmail,
