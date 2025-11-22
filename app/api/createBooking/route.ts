@@ -8,7 +8,7 @@ import fs from "fs/promises";
 import path from "path";
 
 // Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
+// NOTE: don't initialize Resend at module-eval time — do it inside the handler
 
 // JSON file path
 const BOOKINGS_FILE = path.join(process.cwd(), "bookings.json");
@@ -42,30 +42,25 @@ export async function POST(req: Request) {
       "utf8"
     );
 
-    // Step 4: Send Notification Email via Resend
-    await resend.emails.send({
-      from: "Cab Booking <onboarding@resend.dev>",
-      to: process.env.ADMIN_EMAIL!,
-      subject: "New Cab Booking",
-      text: `
-New Booking Received
+    // Step 4: Send Notification Email via Resend (if configured)
+    const resendApiKey = process.env.RESEND_API_KEY;
+    const adminEmail = process.env.ADMIN_EMAIL;
 
-Car: ${body.selectedCar}
-Service: ${body.selectedService}
-
-Customer Info:
-Name: ${body.fullName}
-Phone: ${body.phone}
-
-Trip Details:
-Pickup: ${body.pickup}
-Drop: ${body.drop}
-Date: ${body.pickupDate}
-Time: ${body.pickupTime}
-
-Generated at: ${new Date().toLocaleString()}
-      `,
-    });
+    if (resendApiKey && adminEmail) {
+      try {
+        const resend = new Resend(resendApiKey);
+        await resend.emails.send({
+          from: "Cab Booking <onboarding@resend.dev>",
+          to: adminEmail,
+          subject: "New Cab Booking",
+          text: `New Booking Received\n\nCar: ${body.selectedCar}\nService: ${body.selectedService}\n\nCustomer Info:\nName: ${body.fullName}\nPhone: ${body.phone}\n\nTrip Details:\nPickup: ${body.pickup}\nDrop: ${body.drop}\nDate: ${body.pickupDate}\nTime: ${body.pickupTime}\n\nGenerated at: ${new Date().toLocaleString()}`,
+        });
+      } catch (emailErr) {
+        console.error("Resend email error:", emailErr);
+      }
+    } else {
+      console.warn("Resend not configured — skipping notification email.");
+    }
 
     return NextResponse.json({
       success: true,
