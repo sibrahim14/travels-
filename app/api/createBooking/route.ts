@@ -5,6 +5,7 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
+import { getSupabase } from "../../componts/supabase";
 
 // Initialize Resend
 // NOTE: don't initialize Resend at module-eval time — do it inside the handler
@@ -34,13 +35,15 @@ export async function POST(req: Request) {
       );
     }
 
-    // Step 1: Read previous bookings
-    let bookings = [];
-    try {
-      const file = await fs.readFile(BOOKINGS_FILE, "utf8");
-      bookings = JSON.parse(file);
-    } catch {
-      // file not found → ignore
+    // Step 1: Read previous bookings (only in development; serverless can't persist files)
+    let bookings: any[] = [];
+    if (process.env.NODE_ENV === "development") {
+      try {
+        const file = await fs.readFile(BOOKINGS_FILE, "utf8");
+        bookings = JSON.parse(file);
+      } catch {
+        // file not found → ignore
+      }
     }
 
     // Step 2: Create new booking entry
@@ -52,12 +55,43 @@ export async function POST(req: Request) {
 
     bookings.unshift(newBooking);
 
-    // Step 3: Write updated JSON
-    await fs.writeFile(
-      BOOKINGS_FILE,
-      JSON.stringify(bookings, null, 2),
-      "utf8"
-    );
+    // Step 3: Persist booking to a serverless-safe store (Supabase) and optionally to local JSON in dev
+    // Try Supabase insert first
+    try {
+      const supabase = getSupabase();
+      if (supabase) {
+        const { error: sbError } = await supabase.from("bookings").insert([
+          {
+            id: newBooking.id,
+            fullName: newBooking.fullName,
+            phone: newBooking.phone,
+            pickup: newBooking.pickup,
+            drop: newBooking.drop,
+            pickupDate: newBooking.pickupDate,
+            pickupTime: newBooking.pickupTime,
+            selectedCar: newBooking.selectedCar,
+            selectedService: newBooking.selectedService,
+            createdAt: newBooking.createdAt,
+          },
+        ]);
+        if (sbError) {
+          console.error("Supabase insert error:", sbError);
+        }
+      } else {
+        console.warn("Supabase client not configured; skipping DB insert.");
+      }
+    } catch (sbErr) {
+      console.error("Supabase request failed:", sbErr);
+    }
+
+    // For local development only, still write a JSON file so dev workflow works
+    if (process.env.NODE_ENV === "development") {
+      try {
+        await fs.writeFile(BOOKINGS_FILE, JSON.stringify(bookings, null, 2), "utf8");
+      } catch (fsErr) {
+        console.error("Failed to write bookings.json (dev only):", fsErr);
+      }
+    }
 
     // Step 4: Send Notification Email via Resend (if configured)
     const resendApiKey = process.env.RESEND_API_KEY;
