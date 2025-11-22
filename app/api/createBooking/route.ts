@@ -1,4 +1,4 @@
-// Make route dynamic (important!)
+// Make route dynamic (important for fs + emails)
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
@@ -17,30 +17,32 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // STEP 1: Read previous bookings
+    // Step 1: Read previous bookings
     let bookings = [];
     try {
       const file = await fs.readFile(BOOKINGS_FILE, "utf8");
       bookings = JSON.parse(file);
     } catch {
-      // If file not found → ignore
+      // file not found → ignore
     }
 
-    // STEP 2: Add new booking data
+    // Step 2: Create new booking entry
     const newBooking = {
       id: Date.now(),
       ...body,
+      createdAt: new Date().toISOString(),
     };
 
-    bookings.unshift(newBooking); // Add to start
+    bookings.unshift(newBooking);
 
-    // STEP 3: Save updated bookings
+    // Step 3: Write updated JSON
     await fs.writeFile(
       BOOKINGS_FILE,
-      JSON.stringify(bookings, null, 2)
+      JSON.stringify(bookings, null, 2),
+      "utf8"
     );
 
-    // STEP 4: Send email using RESEND
+    // Step 4: Send Notification Email via Resend
     await resend.emails.send({
       from: "Cab Booking <onboarding@resend.dev>",
       to: process.env.ADMIN_EMAIL!,
@@ -65,7 +67,10 @@ Generated at: ${new Date().toLocaleString()}
       `,
     });
 
-    return NextResponse.json({ success: true, message: "Booking saved & email sent!" });
+    return NextResponse.json({
+      success: true,
+      message: "Booking saved & email sent!",
+    });
 
   } catch (error: any) {
     console.error("Booking API Error:", error);
