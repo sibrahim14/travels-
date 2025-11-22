@@ -38,8 +38,8 @@ export default function ContactPage() {
 
       {/* My Info */}
       <div className="info-box">
-        <p><strong>📞 Phone:</strong> +91 9876543210</p>
-        <p><strong>📧 Email:</strong> myemail@gmail.com</p>
+        <p><strong>📞 Phone:</strong> +91 9876543210 / +91 8019451954</p>
+        <p><strong>📧 Email:</strong> messalerajumesaleraju@gmail.com</p>
         <p><strong>📍 Address:</strong> Hyderabad, Telangana</p>
       </div>
 
@@ -71,7 +71,7 @@ export default function ContactPage() {
           required
         />
 
-        <button type="submit">Send Message</button>
+        <button type="submit" >Send Message</button>
       </form>
     </div>
   );

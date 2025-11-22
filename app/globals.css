@@ -1074,3 +1074,46 @@ button:hover {
     font-size: 26px;
   }
 }
+
+/* congratulation */
+.congrats-container {
+  padding: 40px;
+  text-align: center;
+  background: #f8fffa;
+  border-radius: 20px;
+  max-width: 600px;
+  margin: 135px auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.congrats-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #16a34a; /* green */
+  margin-bottom: 10px;
+}
+
+.congrats-text {
+  font-size: 18px;
+  margin-top: 12px;
+  color: #333;
+}
+
+.congrats-subtext {
+  color: #666;
+  font-size: 16px;
+  margin-top: 6px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

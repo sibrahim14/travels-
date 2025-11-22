@@ -1,11 +1,12 @@
 import React from "react";
+// import "./Congratulations.css";
 
 export default function Congratulations() {
   return (
-    <div className="p-10 text-center">
-      <h1 className="text-3xl font-bold text-green-600">🎉 Booking Successful!</h1>
-      <p className="mt-4 text-lg">Your ride has been successfully booked.</p>
-      <p className="text-gray-600 mt-2">Our team will contact you shortly.</p>
+    <div className="congrats-container">
+      <h1 className="congrats-title">🎉 Booking Successful!</h1>
+      <p className="congrats-text">Your ride has been successfully booked.</p>
+      <p className="congrats-subtext">Our team will contact you shortly.</p>
     </div>
   );
 }

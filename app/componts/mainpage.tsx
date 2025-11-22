@@ -67,7 +67,7 @@ export default function Index() {
       <section className="hero">
         <div className="hero-overlay"></div>
         <div className="hero-content">
-          <h1>SHIVA SAI TRAVELS</h1>
+          <h1>SHIVA SAI TOURSE & TRAVELS</h1>
           <h3>Your Journey Starts Here</h3>
           <p>Book the perfect car for your next adventure</p>
           <div className="hero-buttons">
